@@ -10,7 +10,7 @@ import org.apache.poi.xwpf.usermodel.XWPFTableCell;
 import org.apache.poi.xwpf.usermodel.XWPFTableRow;
 
 import pl.jsolve.sweetener.text.Strings;
-import pl.jsolve.templ4docx.core.Docx;
+import pl.jsolve.templ4docx.core.WordDocument;
 import pl.jsolve.templ4docx.core.VariablePattern;
 import pl.jsolve.templ4docx.extractor.KeyExtractor;
 import pl.jsolve.templ4docx.util.Key;
@@ -28,27 +28,15 @@ public class DocumentCleaner {
         this.keyExtractor = new KeyExtractor();
     }
 
-    /**
-     * Main method for cleaning XWPFRun in whole document. This method moves split variable to one XWPFRun
-     * @param docx
-     * @param variables
-     * @param variablePattern
-     */
-    public void clean(Docx docx, Variables variables, VariablePattern variablePattern) {
+    public void clean(WordDocument wordDocument, Variables variables, VariablePattern variablePattern) {
         List<Key> keys = keyExtractor.extractKeys(variables);
-        for (XWPFParagraph paragraph : docx.getXWPFDocument().getParagraphs()) {
+        for (XWPFParagraph paragraph : wordDocument.getXWPFDocument().getParagraphs()) {
             clean(paragraph.getRuns(), keys, variablePattern);
         }
 
-        cleanTables(docx.getXWPFDocument().getTables(), keys, variablePattern);
+        cleanTables(wordDocument.getXWPFDocument().getTables(), keys, variablePattern);
     }
 
-    /**
-     * Clean content of tables. This method is invoked recursively for each table
-     * @param tables
-     * @param keys
-     * @param variablePattern
-     */
     private void cleanTables(List<XWPFTable> tables, List<Key> keys, VariablePattern variablePattern) {
         for (XWPFTable table : tables) {
             for (XWPFTableRow row : table.getRows()) {
@@ -64,13 +52,6 @@ public class DocumentCleaner {
         }
     }
 
-    /**
-     * Clean list of XWPFRun. If one variable is split between many XWPFRun, this method will move this variable to run
-     * where variable begins. The text from other XWPFRuns which contain parts of found variable is cleaned.
-     * @param runs
-     * @param keys
-     * @param variablePattern
-     */
     private void clean(List<XWPFRun> runs, List<Key> keys, VariablePattern variablePattern) {
         if (runs == null || runs.isEmpty() || runs.size() == 1) {
             return;

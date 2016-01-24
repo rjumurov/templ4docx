@@ -2,7 +2,7 @@ package pl.jsolve.templ4docx.executor;
 
 import java.util.List;
 
-import pl.jsolve.templ4docx.core.Docx;
+import pl.jsolve.templ4docx.core.WordDocument;
 import pl.jsolve.templ4docx.extractor.VariableFinder;
 import pl.jsolve.templ4docx.insert.Insert;
 import pl.jsolve.templ4docx.variable.Variables;
@@ -22,12 +22,12 @@ public class DocumentExecutor {
     }
 
     /**
-     * This method replaces variables in docx template. Note, that before executing this method you should invoke
+     * This method replaces variables in wordDocument template. Note, that before executing this method you should invoke
      * DocumentCleaner.clean method
-     * @param docx Docx object with opened .docx file
+     * @param wordDocument WordDocument object with opened .wordDocument file
      */
-    public void execute(Docx docx) {
-        List<Insert> inserts = variableFinder.find(docx.getXWPFDocument(), variables);
+    public void execute(WordDocument wordDocument) {
+        List<Insert> inserts = variableFinder.find(wordDocument.getXWPFDocument(), variables);
         variableFinder.replace(inserts);
     }
 
